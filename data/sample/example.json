@@ -1,0 +1,16 @@
+{
+    "id": 144343434,
+    "name": "example",
+    "author": "",
+    "creators": [""],
+    "verifier": "",
+    "verification": "https://www.youtube.com/watch?v=tZTsKR-DCYk",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+            {
+            "user": "example user",
+            "percent": 100
+        }
+    ]
+}

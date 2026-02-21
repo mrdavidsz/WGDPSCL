@@ -1,27 +1,52 @@
 [
     {
         "role": "owner",
-        "name": "List Owner",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "biohazard (iamwizard!)",
+        "link": "https://discord.com/users/852286661068718111"
+    },
+    {
+        "role": "owner",
+        "name": "VicDash78",
+        "link": "https://discord.com/users/416690133622980628"
     },
     {
         "role": "admin",
-        "name": "List Admin",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "clyde",
+        "link": "https://discord.com/users/1302689483182964917"
     },
     {
-        "role": "helper",
-        "name": "List Helper",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "role": "admin",
+        "name": "Minhgo",
+        "link": "https://discord.com/users/899485763446665216"
     },
     {
-        "role": "trial",
-        "name": "Trial List Helper",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "role": "admin",
+        "name": "Jolly NØD:3X_WX",
+        "link": "https://discord.com/users/635216708143153188"
+    },
+    {
+        "role": "admin",
+        "name": "Emli",
+        "link": "https://discord.com/users/685908873697427461"
+    },
+    {
+        "role": "admin",
+        "name": "CaramelT",
+        "link": "https://discord.com/users/420865430475898880"
+    },
+    {
+        "role": "admin",
+        "name": "yopp",
+        "link": "https://discord.com/users/956322923008905237"
+    },
+    {
+        "role": "admin",
+        "name": "david (mrdavidss)",
+        "link": "https://discord.com/users/959880218263310406"
     },
     {
         "role": "dev",
-        "name": "List Coder",
-        "link": "https://www.youtube.com/@Prometheus_Alt"
+        "name": "david (mrdavidss)",
+        "link": "https://discord.com/users/959880218263310406"
     }
 ]

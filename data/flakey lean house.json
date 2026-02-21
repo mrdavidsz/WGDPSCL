@@ -1,0 +1,24 @@
+{
+    "id": 26264,
+    "name": "flakey lean house",
+    "author": "biohazard",
+    "creators": "biohazard",
+    "verifier": "biohazard",
+    "verification": "https://youtu.be/KQ_xbYSZCfw",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+                {
+            "user": "yopp",
+            "percent": 100
+        },
+        {
+            "user": "clydie",
+            "percent": 100
+        },
+        {
+            "user": "Woachi",
+            "percent": 100
+        }
+    ]
+}
