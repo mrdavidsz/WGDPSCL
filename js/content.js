@@ -58,9 +58,10 @@ export async function fetchLeaderboard() {
         }
 
         // Verification
+        const verifierName = level?.verifier || 'Unknown';
         const verifier = Object.keys(scoreMap).find(
-            (u) => u.toLowerCase() === level.verifier.toLowerCase(),
-        ) || level.verifier;
+            (u) => u.toLowerCase() === verifierName.toLowerCase()
+            ) || verifierName;
         scoreMap[verifier] ??= {
             verified: [],
             completed: [],
@@ -76,9 +77,10 @@ export async function fetchLeaderboard() {
 
         // Records
         level.records.forEach((record) => {
-            const user = Object.keys(scoreMap).find(
-                (u) => u.toLowerCase() === record.user.toLowerCase(),
-            ) || record.user;
+        const recordUser = record?.user || 'Unknown';
+        const user = Object.keys(scoreMap).find(
+            (u) => u.toLowerCase() === recordUser.toLowerCase()
+        ) || recordUser;
             scoreMap[user] ??= {
                 verified: [],
                 completed: [],
