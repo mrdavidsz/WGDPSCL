@@ -8,6 +8,10 @@
     "percentToQualify": 100,
     "password": "Not Copyable",
     "records": [
+        {
+        "user": "150IQPlayer",
+        "percent": 100
+        }
         
     ]
 }

@@ -6,6 +6,11 @@
     },
     {
         "role": "owner",
+        "name": "david",
+        "link": "https://discord.com/users/959880218263310406"
+    },
+    {
+        "role": "owner",
         "name": "VicDash78",
         "link": "https://discord.com/users/416690133622980628"
     },
@@ -31,11 +36,6 @@
     },
     {
         "role": "admin",
-        "name": "CaramelT",
-        "link": "https://discord.com/users/420865430475898880"
-    },
-    {
-        "role": "admin",
         "name": "yopp",
         "link": "https://discord.com/users/956322923008905237"
     },
@@ -43,6 +43,11 @@
         "role": "admin",
         "name": "david (mrdavidss)",
         "link": "https://discord.com/users/959880218263310406"
+    },
+    {
+        "role": "dev",
+        "name": "biohazard (iamwizard!)",
+        "link": "https://discord.com/users/852286661068718111"
     },
     {
         "role": "dev",
