@@ -1,0 +1,12 @@
+{
+    "id": 123,
+    "name": "test",
+    "author": "Udsad",
+    "creators": ["dsa"],
+    "verifier": "dsa",
+    "verification": "https://www.youtube.com",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+    ]
+}
