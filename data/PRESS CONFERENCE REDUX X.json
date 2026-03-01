@@ -8,9 +8,13 @@
     "percentToQualify": "100",
     "password": "Free to Copy",
     "records": [
-                {
+        {
             "user": "150IQPlayer",
             "percent": 100
+        },
+        {
+        "user": "Quackanilla",
+        "percent": 100
         }
     ]
 }
