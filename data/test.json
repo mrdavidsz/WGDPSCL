@@ -1,0 +1,16 @@
+{
+    "id": 25571,
+    "name": "test",
+    "author": "EpicGuy",
+    "creators": ["EpicGuy"],
+    "verifier": "Bruger",
+    "verification": "https://www.youtube.com/watch?v=rZmv0IqRBY0",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+        {
+        "user": "Quackanilla",
+        "percent": 100
+        }
+    ]
+}
