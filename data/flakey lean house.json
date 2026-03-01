@@ -31,6 +31,10 @@
         {
         "user": "Bruger",
         "percent": 100
+        },
+        {
+        "user": "Line",
+        "percent": 100
         }
     ]
 }

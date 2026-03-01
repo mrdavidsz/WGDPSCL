@@ -9,11 +9,19 @@
     "password": "",
     "records": [
         {
+        "user": "biohazard",
+        "percent": 100
+        },
+        {
         "user": "150IQPlayer",
         "percent": 100
         },
         {
         "user": "quackanilla",
+        "percent": 100
+        },
+        {
+        "user": "Line",
         "percent": 100
         }
     ]
