@@ -1,0 +1,24 @@
+{
+    "id": 28210,
+    "name": "bot",
+    "author": "yopp",
+    "creators": ["yopp", "octagone"],
+    "verifier": "yopp",
+    "verification": "https://www.youtube.com/watch?v=J0lbFx0B4y4",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+        {
+        "user": "150IQPlayer",
+        "percent": 100
+        },
+        {
+        "user": "quackanilla",
+        "percent": 100
+        },
+        {
+        "user": "Bruger",
+        "percent": 100
+        }
+    ]
+}
