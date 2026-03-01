@@ -1,6 +1,6 @@
 {
-    "id": 11132,
-    "name": "67 level",
+    "id": 32808,
+    "name": "67 level (LEGACY)",
     "author": "Maskurade",
     "creators": ["Maskurade"],
     "verifier": "Bruger",
@@ -8,5 +8,17 @@
     "percentToQualify": "100",
     "password": "",
     "records": [
+        {
+        "user": "lemako",
+        "percent": 100
+        },
+        {
+        "user": "biohazard",
+        "percent": 100
+        },
+        {
+        "user": "Quackanilla",
+        "percent": 100
+        }
     ]
 }

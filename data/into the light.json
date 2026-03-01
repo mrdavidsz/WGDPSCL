@@ -2,7 +2,7 @@
     "id": 1482,
     "name": "into the light",
     "author": "MystGD",
-    "creators": "MystGD",
+    "creators": ["MystGD"],
     "verifier": "MystGD",
     "verification": "https://www.youtube.com/embed/_RRxISC4CsY?autoplay=1",
     "percentToQualify": 100,
@@ -10,6 +10,10 @@
     "records": [
         {
         "user": "quackanilla",
+        "percent": 100
+        },
+        {
+        "user": "150IQPlayer",
         "percent": 100
         }
     ]
