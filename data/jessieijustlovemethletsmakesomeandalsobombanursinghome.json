@@ -8,6 +8,9 @@
     "percentToQualify": 100,
     "password": "Copyable",
     "records": [
-
+        {
+        "user": "Bruger",
+        "percent": 100
+        }
     ]
 }
