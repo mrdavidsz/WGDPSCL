@@ -71,6 +71,17 @@
     gap: 2rem;
     padding-right: 2rem;
 }
+.page-leaderboard .player .pack-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.page-leaderboard .player .pack-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0.75rem;
+    padding: 0.35rem 0.55rem;
+}
 .page-leaderboard .player .table {
     table-layout: fixed;
 }

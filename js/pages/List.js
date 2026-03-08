@@ -14,6 +14,11 @@ const roleIconMap = {
     trial: "user-lock",
 };
 
+const listPackColours = {
+    "Top 3 Pack": "#1579d6",
+    "Longest Names Pack": "#1fc155",
+};
+
 export default {
     components: { Spinner, LevelAuthors },
     template: `
@@ -22,24 +27,38 @@ export default {
         </main>
         <main v-else class="page-list">
             <div class="list-container">
+                <input
+                    v-model.trim="searchQuery"
+                    class="list-search type-label-lg"
+                    type="text"
+                    placeholder="Search levels..."
+                />
                 <table class="list" v-if="list">
-                    <tr v-for="([level, err], i) in list">
+                    <tr v-for="item in filteredList" :key="item.i">
                         <td class="rank">
-                            <p v-if="i + 1 <= 150" class="type-label-lg">#{{ i + 1 }}</p>
+                            <p v-if="item.i + 1 <= 150" class="type-label-lg">#{{ item.i + 1 }}</p>
                             <p v-else class="type-label-lg">Legacy</p>
                         </td>
-                        <td class="level" :class="{ 'active': selected == i, 'error': !level }">
-                            <button @click="selected = i">
-                                <span class="type-label-lg">{{ level?.name || \`Error (\${err}.json)\` }}</span>
+                        <td class="level" :class="{ 'active': selected == item.i, 'error': !item.level }">
+                            <button @click="selected = item.i">
+                                <span class="type-label-lg">{{ item.level?.name || \`Error (\${item.err}.json)\` }}</span>
                             </button>
                         </td>
                     </tr>
                 </table>
+                <p v-if="list && filteredList.length === 0" class="type-label-lg">No levels found.</p>
             </div>
             <div class="level-container">
                 <div class="level" v-if="level">
                     <h1>{{ level.name }}</h1>
                     <LevelAuthors :author="level.author" :creators="level.creators" :verifier="level.verifier"></LevelAuthors>
+                    <div
+                        v-if="displayPackName"
+                        class="tag level-pack-pill"
+                        :style="{ background: displayPackColour, color: '#fff' }"
+                    >
+                        {{ displayPackName }}
+                    </div>
                     <iframe class="video" id="videoframe" :src="video" frameborder="0"></iframe>
                     <ul class="stats">
                         <li>
@@ -130,6 +149,7 @@ export default {
     data: () => ({
         list: [],
         editors: [],
+        searchQuery: "",
         loading: true,
         selected: 0,
         errors: [],
@@ -150,6 +170,41 @@ export default {
                     ? this.level.showcase
                     : this.level.verification
             );
+        },
+        displayPackName() {
+            const pack = this.level?.packs?.[0];
+            if (typeof pack === "string") return pack;
+            if (pack?.name) return pack.name;
+            const listPack = this.level?.listpacks?.[0];
+            if (typeof listPack === "string") return listPack;
+            return "";
+        },
+        displayPackColour() {
+            const pack = this.level?.packs?.[0];
+            if (pack?.colour) return pack.colour;
+            const listPack = this.level?.listpacks?.[0];
+            if (typeof listPack === "string" && listPackColours[listPack]) {
+                return listPackColours[listPack];
+            }
+            return "#3f51b5";
+        },
+        filteredList() {
+            const query = this.searchQuery.toLowerCase();
+            return this.list
+                .map(([level, err], i) => ({ level, err, i }))
+                .filter((item) => {
+                    if (!query) return true;
+                    const name = item.level?.name || item.err || "";
+                    return name.toLowerCase().includes(query);
+                });
+        },
+    },
+    watch: {
+        filteredList(newList) {
+            if (!newList.length) return;
+            if (!newList.some((item) => item.i === this.selected)) {
+                this.selected = newList[0].i;
+            }
         },
     },
     async mounted() {

@@ -1,3 +1,5 @@
+@import url('/css/pages/listpacks.css');
+
 :root {
     --color-background: white;
     --color-on-background: black;
@@ -8,6 +10,7 @@
     --color-error: #de0000;
     --color-on-error: white;
 }
+
 
 main.dark,
 header.dark {

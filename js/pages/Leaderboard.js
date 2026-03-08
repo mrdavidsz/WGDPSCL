@@ -45,6 +45,16 @@ export default {
                     <div class="player">
                         <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
                         <h3>{{ entry.total }}</h3>
+                        <div class="pack-badges" v-if="entry.listpacks?.length">
+                            <span
+                                v-for="pack in entry.listpacks"
+                                :key="pack.name"
+                                class="pack-badge type-label-lg"
+                                :style="{ background: pack.colour, color: '#fff' }"
+                            >
+                                {{ pack.name }}
+                            </span>
+                        </div>
                         <h2 v-if="entry.verified.length > 0">Verified ({{ entry.verified.length}})</h2>
                         <table class="table">
                             <tr v-for="score in entry.verified">
