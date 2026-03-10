@@ -6,6 +6,35 @@
 .page-list .list-container {
     padding-inline: 1rem;
 }
+.page-list .list-container .list-tabs {
+    margin-bottom: 0.75rem;
+    background: #6f747d;
+    border-radius: 0.75rem;
+    padding: 0.25rem 0.4rem;
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.35);
+}
+.page-list .list-container .list-tabs .tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    border-bottom: 3px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.7rem 0.6rem;
+    cursor: pointer;
+    font-family: "Lexend Deca", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+}
+.page-list .list-container .list-tabs .tab.selected {
+    border-bottom-color: #ffffff;
+}
+.page-list .list-container .list-tabs .tab:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
 .page-list .list-container .list-search {
     width: 100%;
     margin-bottom: 0.75rem;

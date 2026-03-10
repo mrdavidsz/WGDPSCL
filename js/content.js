@@ -1,28 +1,37 @@
 import { round, score } from './score.js';
 const dir = '/data';
 const defaultPackColour = '#71757a';
+const packColourOverrides = {
+    'Top 3 Pack': '#1579d6',
+    'Longest Names Pack': '#1fc155',
+};
 
 function normalizePack(pack) {
     if (typeof pack === 'string') {
-        return { name: pack, colour: defaultPackColour };
+        return { name: pack, colour: packColourOverrides[pack] || defaultPackColour };
     }
     if (!pack || typeof pack !== 'object' || !pack.name) {
         return null;
     }
     return {
         ...pack,
-        colour: pack.colour || defaultPackColour,
+        colour: pack.colour || packColourOverrides[pack.name] || defaultPackColour,
     };
 }
 
+function getLevelPacks(level) {
+    if (!level) return [];
+    if (Array.isArray(level.packs)) {
+        return level.packs.map((p) => normalizePack(p)).filter(Boolean);
+    }
+    if (Array.isArray(level.listpacks)) {
+        return level.listpacks.map((p) => normalizePack(p)).filter(Boolean);
+    }
+    return [];
+}
+
 function levelHasPack(level, packName) {
-    if (!level || !Array.isArray(level.packs)) return false;
-    return level.packs.some((pack) => {
-        if (typeof pack === 'string') {
-            return pack === packName;
-        }
-        return pack?.name === packName;
-    });
+    return getLevelPacks(level).some((pack) => pack.name === packName);
 }
 
 function attachPackToLevel(level, pack) {
@@ -30,9 +39,7 @@ function attachPackToLevel(level, pack) {
         name: pack?.name || String(pack),
         colour: defaultPackColour,
     };
-    const packs = Array.isArray(level?.packs)
-        ? level.packs.map((p) => normalizePack(p) || p).filter(Boolean)
-        : [];
+    const packs = getLevelPacks(level);
     const alreadyHasPack = packs.some((p) => p.name === normalizedPack.name);
     if (!alreadyHasPack) packs.push(normalizedPack);
 
@@ -64,23 +71,36 @@ function buildDemoPacksFromList(list) {
         .map((level) => level.path);
 
     return [
-        { name: 'Top 1 Pack', colour: '#1579d6', levels: top3Paths },
+        { name: 'Top 3 Pack', colour: '#1579d6', levels: top3Paths },
         { name: 'Longest Names Pack', colour: '#1fc155', levels: longest3Paths },
     ];
+}
+
+function levelHasPackName(level, packName) {
+    const fromPacks = getLevelPacks(level).some((pack) => pack.name === packName);
+    if (fromPacks) return true;
+    if (!Array.isArray(level?.listpacks)) return false;
+    return level.listpacks.includes(packName);
 }
 
 export async function fetchList() {
     const listResult = await fetch(`${dir}/_list.json`);
     try {
         const list = await listResult.json();
-        return await Promise.all(
+        const loaded = await Promise.all(
             list.map(async (path, rank) => {
                 const levelResult = await fetch(`${dir}/${path}.json`);
                 try {
                     const level = await levelResult.json();
+                    const isLegacyPath = path.toUpperCase().includes('(LEGACY)');
+                    const cleanName =
+                        isLegacyPath && typeof level.name === 'string'
+                            ? level.name.replace(/\s*\(LEGACY\)\s*/gi, '').trim()
+                            : level.name;
                     return [
                         {
                             ...level,
+                            name: cleanName,
                             path,
                             records: level.records.sort(
                                 (a, b) => b.percent - a.percent,
@@ -94,6 +114,21 @@ export async function fetchList() {
                 }
             }),
         );
+
+        const demoPacks = buildDemoPacksFromList(loaded);
+        demoPacks.forEach((pack) => {
+            pack.levels.forEach((path) => {
+                const found = loaded.find(([level]) => level?.path === path);
+                const level = found?.[0];
+                if (!level) return;
+                if (levelHasPackName(level, pack.name)) return;
+                level.listpacks = Array.isArray(level.listpacks)
+                    ? [...level.listpacks, pack.name]
+                    : [pack.name];
+            });
+        });
+
+        return loaded;
     } catch {
         console.error(`Failed to load list.`);
         return null;
@@ -121,10 +156,7 @@ export async function fetchPacks() {
 
     const discovered = new Map();
     list.forEach(([level]) => {
-        if (!level || !Array.isArray(level.packs)) return;
-        level.packs.forEach((pack) => {
-            const normalized = normalizePack(pack);
-            if (!normalized) return;
+        getLevelPacks(level).forEach((normalized) => {
             if (!discovered.has(normalized.name)) {
                 discovered.set(normalized.name, normalized);
             }
@@ -183,6 +215,7 @@ export async function fetchPackLevels(packName) {
 
 export async function fetchLeaderboard() {
     const list = await fetchList();
+    if (!list) return [[], []];
 
     const scoreMap = {};
     const errs = [];
@@ -205,25 +238,28 @@ export async function fetchLeaderboard() {
         verified.push({
             rank: rank + 1,
             level: level.name,
+            path: level.path,
             score: score(rank + 1, 100, level.percentToQualify),
             link: level.verification,
         });
 
         level.records.forEach((record) => {
-        const recordUser = record?.user || 'Unknown';
-        const user = Object.keys(scoreMap).find(
-            (u) => u.toLowerCase() === recordUser.toLowerCase()
-        ) || recordUser;
+            const recordUser = record?.user || 'Unknown';
+            const user = Object.keys(scoreMap).find(
+                (u) => u.toLowerCase() === recordUser.toLowerCase(),
+            ) || recordUser;
+            const recordPercent = Number(record.percent);
             scoreMap[user] ??= {
                 verified: [],
                 completed: [],
                 progressed: [],
             };
             const { completed, progressed } = scoreMap[user];
-            if (record.percent === 100) {
+            if (recordPercent >= 100) {
                 completed.push({
                     rank: rank + 1,
                     level: level.name,
+                    path: level.path,
                     score: score(rank + 1, 100, level.percentToQualify),
                     link: record.link,
                 });
@@ -233,22 +269,64 @@ export async function fetchLeaderboard() {
             progressed.push({
                 rank: rank + 1,
                 level: level.name,
-                percent: record.percent,
-                score: score(rank + 1, record.percent, level.percentToQualify),
+                path: level.path,
+                percent: recordPercent,
+                score: score(rank + 1, recordPercent, level.percentToQualify),
                 link: record.link,
             });
         });
     });
+
+    const packRequirements = new Map();
+    const packs = await fetchPacks();
+    if (packs?.length) {
+        const packLevelsEntries = await Promise.all(
+            packs.map(async (pack) => {
+                const levels = await fetchPackLevels(pack.name);
+                return { pack, levels };
+            }),
+        );
+        packLevelsEntries.forEach(({ pack, levels }) => {
+            if (!packRequirements.has(pack.name)) {
+                packRequirements.set(pack.name, {
+                    name: pack.name,
+                    colour: pack.colour || defaultPackColour,
+                    levels: new Set(),
+                });
+            }
+            const item = packRequirements.get(pack.name);
+            item.colour = pack.colour || item.colour || defaultPackColour;
+            levels.forEach(([data]) => {
+                const path = data?.level?.path;
+                if (path) item.levels.add(path);
+            });
+        });
+    }
 
     const res = Object.entries(scoreMap).map(([user, scores]) => {
         const { verified, completed, progressed } = scores;
         const total = [verified, completed, progressed]
             .flat()
             .reduce((prev, cur) => prev + cur.score, 0);
+        const completedPaths = new Set(
+            [...verified, ...completed, ...progressed.filter((p) => Number(p.percent) >= 100)]
+                .map((entry) => entry.path)
+                .filter(Boolean),
+        );
+        const listpacks = [...packRequirements.values()]
+            .filter((pack) => {
+                if (!pack.levels.size) return false;
+                for (const path of pack.levels) {
+                    if (completedPaths.has(path)) return true;
+                }
+                return false;
+            })
+            .map((pack) => ({ name: pack.name, colour: pack.colour }));
 
         return {
             user,
             total: round(total),
+            listpacks,
             ...scores,
         };
     });

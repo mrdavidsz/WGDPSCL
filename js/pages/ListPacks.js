@@ -11,6 +11,23 @@ const listPackColours = {
     'Longest Names Pack': '#1fc155',
 };
 
+function getFirstPackTag(level) {
+    const fromPacks = level?.packs?.[0];
+    if (typeof fromPacks === 'string') return { name: fromPacks, colour: null };
+    if (fromPacks?.name) return { name: fromPacks.name, colour: fromPacks.colour || null };
+
+    if (Array.isArray(level?.listpacks) && typeof level.listpacks[0] === 'string') {
+        return { name: level.listpacks[0], colour: null };
+    }
+    if (typeof level?.listpacks === 'string') {
+        return { name: level.listpacks, colour: null };
+    }
+    if (typeof level?.listpack === 'string') {
+        return { name: level.listpack, colour: null };
+    }
+    return { name: '', colour: null };
+}
+
 export default {
     components: {
         Spinner,
@@ -140,22 +157,13 @@ export default {
             return this.currentLevelData?.level;
         },
         displayPackName() {
-            const fromLevel = this.level?.packs?.[0];
-            if (typeof fromLevel === 'string') return fromLevel;
-            if (fromLevel?.name) return fromLevel.name;
-            const fromListPacks = this.level?.listpacks?.[0];
-            if (typeof fromListPacks === 'string') return fromListPacks;
-            return '';
+            return getFirstPackTag(this.level).name;
         },
         displayPackColour() {
-            const fromLevel = this.level?.packs?.[0];
-            if (fromLevel?.colour) return fromLevel.colour;
-            const fromListPacks = this.level?.listpacks?.[0];
-            if (
-                typeof fromListPacks === 'string' &&
-                listPackColours[fromListPacks]
-            ) {
-                return listPackColours[fromListPacks];
+            const tag = getFirstPackTag(this.level);
+            if (tag.colour) return tag.colour;
+            if (tag.name && listPackColours[tag.name]) {
+                return listPackColours[tag.name];
             }
             return '#71757a';
         },

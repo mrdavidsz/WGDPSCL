@@ -19,6 +19,23 @@ const listPackColours = {
     "Longest Names Pack": "#1fc155",
 };
 
+function getFirstPackTag(level) {
+    const fromPacks = level?.packs?.[0];
+    if (typeof fromPacks === "string") return { name: fromPacks, colour: null };
+    if (fromPacks?.name) return { name: fromPacks.name, colour: fromPacks.colour || null };
+
+    if (Array.isArray(level?.listpacks) && typeof level.listpacks[0] === "string") {
+        return { name: level.listpacks[0], colour: null };
+    }
+    if (typeof level?.listpacks === "string") {
+        return { name: level.listpacks, colour: null };
+    }
+    if (typeof level?.listpack === "string") {
+        return { name: level.listpack, colour: null };
+    }
+    return { name: "", colour: null };
+}
+
 export default {
     components: { Spinner, LevelAuthors },
     template: `
@@ -27,6 +44,22 @@ export default {
         </main>
         <main v-else class="page-list">
             <div class="list-container">
+                <div class="tabs list-tabs">
+                    <button
+                        class="tab type-label-lg"
+                        :class="{ selected: activeSection === 'levels' }"
+                        @click="activeSection = 'levels'"
+                    >
+                        Levels
+                    </button>
+                    <button
+                        class="tab type-label-lg"
+                        :class="{ selected: activeSection === 'legacy' }"
+                        @click="activeSection = 'legacy'"
+                    >
+                        Legacy Levels
+                    </button>
+                </div>
                 <input
                     v-model.trim="searchQuery"
                     class="list-search type-label-lg"
@@ -36,12 +69,12 @@ export default {
                 <table class="list" v-if="list">
                     <tr v-for="item in filteredList" :key="item.i">
                         <td class="rank">
-                            <p v-if="item.i + 1 <= 150" class="type-label-lg">#{{ item.i + 1 }}</p>
-                            <p v-else class="type-label-lg">Legacy</p>
+                            <p class="type-label-lg" v-if="activeSection === 'legacy'">Legacy</p>
+                            <p class="type-label-lg" v-else>#{{ item.i + 1 }}</p>
                         </td>
                         <td class="level" :class="{ 'active': selected == item.i, 'error': !item.level }">
                             <button @click="selected = item.i">
-                                <span class="type-label-lg">{{ item.level?.name || \`Error (\${item.err}.json)\` }}</span>
+                                <span class="type-label-lg">{{ displayLevelName(item.level, item.err) }}</span>
                             </button>
                         </td>
                     </tr>
@@ -150,6 +183,7 @@ export default {
         list: [],
         editors: [],
         searchQuery: "",
+        activeSection: "levels",
         loading: true,
         selected: 0,
         errors: [],
@@ -172,19 +206,25 @@ export default {
             );
         },
         displayPackName() {
-            const pack = this.level?.packs?.[0];
-            if (typeof pack === "string") return pack;
-            if (pack?.name) return pack.name;
-            const listPack = this.level?.listpacks?.[0];
-            if (typeof listPack === "string") return listPack;
+            const direct = getFirstPackTag(this.level).name;
+            if (direct) return direct;
+
+            if (this.selected <= 2) return "Top 3 Pack";
+
+            const longestIndexes = this.list
+                .map(([level], i) => ({ i, len: (level?.path || "").length }))
+                .sort((a, b) => b.len - a.len)
+                .slice(0, 3)
+                .map((item) => item.i);
+            if (longestIndexes.includes(this.selected)) return "Longest Names Pack";
+
             return "";
         },
         displayPackColour() {
-            const pack = this.level?.packs?.[0];
-            if (pack?.colour) return pack.colour;
-            const listPack = this.level?.listpacks?.[0];
-            if (typeof listPack === "string" && listPackColours[listPack]) {
-                return listPackColours[listPack];
+            const tag = getFirstPackTag(this.level);
+            if (tag.colour) return tag.colour;
+            if (tag.name && listPackColours[tag.name]) {
+                return listPackColours[tag.name];
             }
             return "#3f51b5";
         },
@@ -193,6 +233,10 @@ export default {
             return this.list
                 .map(([level, err], i) => ({ level, err, i }))
                 .filter((item) => {
+                    const path = item.level?.path || item.err || "";
+                    const isLegacy = path.includes("(LEGACY)");
+                    if (this.activeSection === "legacy" && !isLegacy) return false;
+                    if (this.activeSection === "levels" && isLegacy) return false;
                     if (!query) return true;
                     const name = item.level?.name || item.err || "";
                     return name.toLowerCase().includes(query);
@@ -235,5 +279,9 @@ export default {
     methods: {
         embed,
         score,
+        displayLevelName(level, err) {
+            const raw = level?.name || `Error (${err}.json)`;
+            return raw.replace(/\s*\(LEGACY\)\s*/gi, "").trim();
+        },
     },
 };
