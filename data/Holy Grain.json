@@ -4,7 +4,7 @@
     "author": "Bruger",
     "creators": "Bruger",
     "verifier": "Bruger",
-    "verification": "https://www.youtube.com/watch?v=i4yMcklxHw8",
+    "verification": "https://www.youtube.com/watch?v=a6bDM7QXEQM",
     "percentToQualify": "100",
     "password": "Free to Copy",
     "records": [
@@ -18,6 +18,10 @@
         },
         {
         "user": "Bruger",
+        "percent": 100
+        },
+        {
+        "user": "venus",
         "percent": 100
         }
     ]
