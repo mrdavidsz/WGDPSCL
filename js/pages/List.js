@@ -190,59 +190,76 @@ export default {
         roleIconMap,
         store
     }),
-    computed: {
-        level() {
-            return this.list[this.selected][0];
-        },
-        video() {
-            if (!this.level.showcase) {
-                return embed(this.level.verification);
-            }
-
-            return embed(
-                this.toggledShowcase
-                    ? this.level.showcase
-                    : this.level.verification
-            );
-        },
-        displayPackName() {
-            const direct = getFirstPackTag(this.level).name;
-            if (direct) return direct;
-
-            if (this.selected <= 2) return "Top 3 Pack";
-
-            const longestIndexes = this.list
-                .map(([level], i) => ({ i, len: (level?.path || "").length }))
-                .sort((a, b) => b.len - a.len)
-                .slice(0, 3)
-                .map((item) => item.i);
-            if (longestIndexes.includes(this.selected)) return "Longest Names Pack";
-
-            return "";
-        },
-        displayPackColour() {
-            const tag = getFirstPackTag(this.level);
-            if (tag.colour) return tag.colour;
-            if (tag.name && listPackColours[tag.name]) {
-                return listPackColours[tag.name];
-            }
-            return "#3f51b5";
-        },
-        filteredList() {
-            const query = this.searchQuery.toLowerCase();
-            return this.list
-                .map(([level, err], i) => ({ level, err, i }))
-                .filter((item) => {
-                    const path = item.level?.path || item.err || "";
-                    const isLegacy = path.includes("(LEGACY)");
-                    if (this.activeSection === "legacy" && !isLegacy) return false;
-                    if (this.activeSection === "levels" && isLegacy) return false;
-                    if (!query) return true;
-                    const name = item.level?.name || item.err || "";
-                    return name.toLowerCase().includes(query);
-                });
-        },
+computed: {
+    level() {
+        return this.list?.[this.selected]?.[0] || null;
     },
+
+    video() {
+        if (!this.level) return "";
+
+        if (!this.level.showcase) {
+            return embed(this.level.verification);
+        }
+
+        return embed(
+            this.toggledShowcase
+                ? this.level.showcase
+                : this.level.verification
+        );
+    },
+
+    displayPackName() {
+        if (!this.level) return "";
+
+        const direct = getFirstPackTag(this.level).name;
+        if (direct) return direct;
+
+        if (this.selected <= 2) return "Top 3 Pack";
+
+        const longestIndexes = this.list
+            .map(([level], i) => ({ i, len: (level?.path || "").length }))
+            .sort((a, b) => b.len - a.len)
+            .slice(0, 3)
+            .map((item) => item.i);
+
+        if (longestIndexes.includes(this.selected)) return "Longest Names Pack";
+
+        return "";
+    },
+
+    displayPackColour() {
+        if (!this.level) return "#3f51b5";
+
+        const tag = getFirstPackTag(this.level);
+        if (tag.colour) return tag.colour;
+        if (tag.name && listPackColours[tag.name]) {
+            return listPackColours[tag.name];
+        }
+        return "#3f51b5";
+    },
+
+    filteredList() {
+        if (!Array.isArray(this.list)) return [];
+
+        const query = this.searchQuery.toLowerCase();
+
+        return this.list
+            .map(([level, err], i) => ({ level, err, i }))
+            .filter((item) => {
+                const path = item.level?.path || item.err || "";
+                const isLegacy = path.includes("(LEGACY)");
+
+                if (this.activeSection === "legacy" && !isLegacy) return false;
+                if (this.activeSection === "levels" && isLegacy) return false;
+
+                if (!query) return true;
+
+                const name = item.level?.name || item.err || "";
+                return name.toLowerCase().includes(query);
+            });
+    }
+},
     watch: {
         filteredList(newList) {
             if (!newList.length) return;
