@@ -95,8 +95,9 @@ export default {
                     <iframe class="video" id="videoframe" :src="video" frameborder="0"></iframe>
                     <ul class="stats">
                         <li>
-                            <div class="type-title-sm">Points when completed</div>
-                            <p>{{ score(selected + 1, 100, level.percentToQualify) }}</p>
+                            <div class="type-title-sm">{{ pointLabel }}</div>
+                            <p v-if="levelPoints !== null">{{ levelPoints }}</p>
+                            <p v-else>Not awarded for legacy levels.</p>
                         </li>
                         <li>
                             <div class="type-title-sm">ID</div>
@@ -190,15 +191,29 @@ export default {
         roleIconMap,
         store
     }),
-computed: {
-    level() {
-        return this.list?.[this.selected]?.[0] || null;
-    },
+    computed: {
+        level() {
+            return this.list?.[this.selected]?.[0] || null;
+        },
 
-    video() {
-        if (!this.level) return "";
+        isLegacyLevel() {
+            const path = this.level?.path;
+            return typeof path === 'string' && path.toUpperCase().includes('(LEGACY)');
+        },
 
-        if (!this.level.showcase) {
+        pointLabel() {
+            return this.isLegacyLevel ? 'Points' : 'Points when completed';
+        },
+
+        levelPoints() {
+            if (!this.level || this.isLegacyLevel) return null;
+            return this.score(this.selected + 1, 100, this.level.percentToQualify);
+        },
+
+        video() {
+            if (!this.level) return "";
+
+            if (!this.level.showcase) {
             return embed(this.level.verification);
         }
 

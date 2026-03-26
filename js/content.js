@@ -34,6 +34,11 @@ function levelHasPack(level, packName) {
     return getLevelPacks(level).some((pack) => pack.name === packName);
 }
 
+function isLegacyLevel(level) {
+    const path = level?.path;
+    return typeof path === 'string' && path.toUpperCase().includes('(LEGACY)');
+}
+
 function attachPackToLevel(level, pack) {
     const normalizedPack = normalizePack(pack) || {
         name: pack?.name || String(pack),
@@ -60,7 +65,7 @@ async function fetchPackDefinitions() {
     }
 }
 
-function buildDemoPacksFromList(list) {
+function buildFallbackPacksFromList(list) {
     const validLevels = list
         .filter(([level]) => level?.path)
         .map(([level]) => level);
@@ -115,8 +120,8 @@ export async function fetchList() {
             }),
         );
 
-        const demoPacks = buildDemoPacksFromList(loaded);
-        demoPacks.forEach((pack) => {
+        const fallbackPacks = buildFallbackPacksFromList(loaded);
+        fallbackPacks.forEach((pack) => {
             pack.levels.forEach((path) => {
                 const found = loaded.find(([level]) => level?.path === path);
                 const level = found?.[0];
@@ -166,7 +171,7 @@ export async function fetchPacks() {
     const packs = [...discovered.values()];
     if (packs.length > 0) return packs;
 
-    return buildDemoPacksFromList(list);
+    return buildFallbackPacksFromList(list);
 }
 
 export async function fetchPackLevels(packName) {
@@ -197,16 +202,16 @@ export async function fetchPackLevels(packName) {
         });
     if (byPackTag.length > 0) return byPackTag;
 
-    const demoPack = buildDemoPacksFromList(list).find((p) => p.name === packName);
-    if (demoPack && Array.isArray(demoPack.levels) && demoPack.levels.length > 0) {
-        return demoPack.levels.map((path) => {
+    const fallbackPack = buildFallbackPacksFromList(list).find((p) => p.name === packName);
+    if (fallbackPack && Array.isArray(fallbackPack.levels) && fallbackPack.levels.length > 0) {
+        return fallbackPack.levels.map((path) => {
             const found =
                 list.find(([level]) => level?.path === path) ||
                 list.find(([_, err]) => err === path);
             if (!found) return [null, path];
             const [level, err] = found;
             if (!level) return [null, err];
-            return [{ level: attachPackToLevel(level, demoPack), records: level.records }, null];
+            return [{ level: attachPackToLevel(level, fallbackPack), records: level.records }, null];
         });
     }
 
@@ -227,21 +232,29 @@ export async function fetchLeaderboard() {
 
         const verifierName = level?.verifier || 'Unknown';
         const verifier = Object.keys(scoreMap).find(
-            (u) => u.toLowerCase() === verifierName.toLowerCase()
-            ) || verifierName;
+            (u) => u.toLowerCase() === verifierName.toLowerCase(),
+        ) || verifierName;
         scoreMap[verifier] ??= {
             verified: [],
             completed: [],
             progressed: [],
+            legacyCompleted: [],
+            legacyProgressed: [],
         };
-        const { verified } = scoreMap[verifier];
-        verified.push({
+        const entry = scoreMap[verifier];
+        const isLegacy = isLegacyLevel(level);
+        const verifiedPayload = {
             rank: rank + 1,
             level: level.name,
             path: level.path,
             score: score(rank + 1, 100, level.percentToQualify),
             link: level.verification,
-        });
+        };
+        if (isLegacy) {
+            entry.legacyCompleted.push(verifiedPayload);
+        } else {
+            entry.verified.push(verifiedPayload);
+        }
 
         level.records.forEach((record) => {
             const recordUser = record?.user || 'Unknown';
@@ -253,27 +266,40 @@ export async function fetchLeaderboard() {
                 verified: [],
                 completed: [],
                 progressed: [],
+                legacyCompleted: [],
+                legacyProgressed: [],
             };
-            const { completed, progressed } = scoreMap[user];
+            const userEntry = scoreMap[user];
+            const entryIsLegacy = isLegacy;
             if (recordPercent >= 100) {
-                completed.push({
+                const payload = {
                     rank: rank + 1,
                     level: level.name,
                     path: level.path,
                     score: score(rank + 1, 100, level.percentToQualify),
                     link: record.link,
-                });
+                };
+                if (entryIsLegacy) {
+                    userEntry.legacyCompleted.push(payload);
+                } else {
+                    userEntry.completed.push(payload);
+                }
                 return;
             }
 
-            progressed.push({
+            const payload = {
                 rank: rank + 1,
                 level: level.name,
                 path: level.path,
                 percent: recordPercent,
                 score: score(rank + 1, recordPercent, level.percentToQualify),
                 link: record.link,
-            });
+            };
+            if (entryIsLegacy) {
+                userEntry.legacyProgressed.push(payload);
+            } else {
+                userEntry.progressed.push(payload);
+            }
         });
     });
 

@@ -117,11 +117,11 @@ export default {
                     </div>
                     <h3>About the packs</h3>
                     <p>
-                        These are list packs all chosen by the WGDPSCL List Dev team that you can beat levels for and get the packs attached to your profile.
+                        These packs were selected by the WGDPSCL List Dev team; beat every level they include to earn the pack on your profile.
                     </p>
-                    <h3>How can I get these packs?</h3>
+                    <h3>How do you earn a pack?</h3>
                     <p>
-                        You get packs by beating all levels that are under them.
+                        Clear every level that belongs to that pack and it will be awarded to you.
                     </p>
                     <p>Thanks to KrisGra & TSL for helping to make the packs function</p>
                 </div>

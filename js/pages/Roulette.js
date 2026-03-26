@@ -102,7 +102,7 @@ export default {
     data: () => ({
         loading: false,
         levels: [],
-        progression: [], // list of percentages completed
+        progression: [],
         percentage: undefined,
         givenUp: false,
         showRemaining: false,
@@ -112,14 +112,13 @@ export default {
         fileInput: undefined,
     }),
     mounted() {
-        // Create File Input
+
         this.fileInput = document.createElement('input');
         this.fileInput.type = 'file';
         this.fileInput.multiple = false;
         this.fileInput.accept = '.json';
         this.fileInput.addEventListener('change', this.onImportUpload);
 
-        // Load progress from local storage
         const roulette = JSON.parse(localStorage.getItem('roulette'));
 
         if (!roulette) {

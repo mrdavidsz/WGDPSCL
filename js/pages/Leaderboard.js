@@ -69,9 +69,9 @@ export default {
                                 </td>
                             </tr>
                         </table>
-                        <h2 v-if="entry.completed.length > 0">Completed ({{ entry.completed.length }})</h2>
-                        <table class="table">
-                            <tr v-for="score in entry.completed">
+                        <h2 v-if="completedEntries.length > 0">Completed ({{ completedEntries.length }})</h2>
+                        <table class="table" v-if="completedEntries.length > 0">
+                            <tr v-for="score in completedEntries">
                                 <td class="rank">
                                     <p>#{{ score.rank }}</p>
                                 </td>
@@ -97,6 +97,17 @@ export default {
                                 </td>
                             </tr>
                         </table>
+                        <h2 v-if="legacyEntries.length">Legacy Completed ({{ legacyEntries.length }})</h2>
+                        <table class="table" v-if="legacyEntries.length">
+                            <tr v-for="score in legacyEntries">
+                                <td class="rank">
+                                    <p>#{{ score.rank }}</p>
+                                </td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -105,6 +116,12 @@ export default {
     computed: {
         entry() {
             return this.leaderboard[this.selected];
+        },
+        legacyEntries() {
+            return this.entry?.legacyCompleted || [];
+        },
+        completedEntries() {
+            return this.entry?.completed || [];
         },
     },
     async mounted() {
