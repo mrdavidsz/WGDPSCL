@@ -1,0 +1,16 @@
+{
+    "id": 33145,
+    "name": "dumb ass wave",
+    "author": "PizzaEnjoyer77",
+    "creators": ["PizzaEnjoyer77"],
+    "verifier": "PizzaEnjoyer77",
+    "verification": "https://www.youtube.com/watch?v=35Uiu81oJqI",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+         {
+        "user": "biohazard",
+        "percent": 100
+        }
+    ]
+}
