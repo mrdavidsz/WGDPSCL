@@ -3,10 +3,14 @@
     "name": "Myst",
     "author": "pppixel",
     "creators": ["pppixel"],
-    "verifier": "Stinky",
-    "verification": "https://www.youtube.com/watch?v=PnwuJ29roGk",
+    "verifier": "pppixel",
+    "verification": "https://www.youtube.com/watch?v=wG9tZNtfwkg",
     "percentToQualify": "100",
     "password": "",
     "records": [
+        {
+        "user": "Stinky",
+        "percent": 100
+        }
     ]
 }
