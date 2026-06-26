@@ -3,13 +3,17 @@
     "name": "corruption",
     "author": "TheShadowRealm",
     "creators": ["TheShadowRealm"],
-    "verifier": "Bruger",
+    "verifier": "TheShadowRealm",
     "verification": "https://youtu.be/j2D15Dbyalw",
     "percentToQualify": "100",
     "password": "",
     "records": [
         {
         "user": "Stinky",
+        "percent": 100
+        }
+        {
+        "user": "misketta",
         "percent": 100
         }
     ]

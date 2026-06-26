@@ -3,7 +3,7 @@
     "name": "Wave Not Challenge",
     "author": "ilScreli",
     "creators": ["ilScreli"],
-    "verifier": "Bruger",
+    "verifier": "TheShadowRealm",
     "verification": "https://www.youtube.com/watch?v=rZmv0IqRBY0",
     "percentToQualify": "100",
     "password": "",
@@ -18,6 +18,10 @@
         },
         {
         "user": "venus",
+        "percent": 100
+        }
+        {
+        "user": "OhjayMaybe",
         "percent": 100
         }
     ]

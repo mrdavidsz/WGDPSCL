@@ -20,5 +20,9 @@
         "user": "venus",
         "percent": 100
         }
+        {
+        "user": "Buzz",
+        "percent": 100
+        }
     ]
 }

@@ -3,7 +3,7 @@
     "name": "Tuff Wave Challenge",
     "author": "Fake Slopes",
     "creators": ["Fake Slopes"],
-    "verifier": "Bruger",
+    "verifier": "TheShadowRealm",
     "verification": "https://www.youtube.com/watch?v=rZmv0IqRBY0",
     "percentToQualify": "100",
     "password": "",
@@ -20,5 +20,10 @@
         "user": "Line",
         "percent": 100
         }
+        {
+        "user": "misketta",
+        "percent": 100
+        }
+
     ]
 }
