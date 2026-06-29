@@ -14,5 +14,9 @@
             "percent": 100,
             "hz": 60
         }
+        {
+        "user": "Stinky",
+        "percent": 100
+        }
     ]
 }
