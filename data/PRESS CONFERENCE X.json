@@ -2,7 +2,7 @@
     "id": 28011,
     "name": "PRESS CONFERENCE X",
     "author": "TheShadowRealm",
-    "creators": "TheShadowRealm",
+    "creators": ["TheShadowRealm"],
     "verifier": "TheShadowRealm",
     "verification": "https://www.youtube.com/watch?v=uHYQtMcejCU",
     "percentToQualify": "100",

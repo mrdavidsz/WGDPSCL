@@ -2,7 +2,7 @@
     "id": 1751,
     "name": "AAA unnerfed",
     "author": "TheShadowRealm",
-    "creators": "TheShadowRealm",
+    "creators": ["TheShadowRealm"],
     "verifier": "TheShadowRealm",
     "verification": "https://youtu.be/KcFGfDqwycM",
     "percentToQualify": "100",
