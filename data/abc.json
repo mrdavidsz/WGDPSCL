@@ -1,1 +1,17 @@
 
+{
+    "id": 12312,
+    "name": "abc",
+    "author": "TheShadowRealm",
+    "creators": ["TheShadowRealm"],
+    "verifier": "TheShadowRealm",
+    "verification": "https://youtu.be/j2D15Dbyalw",
+    "percentToQualify": "100",
+    "password": "",
+    "records": [
+        {
+        "user": "davf",
+        "percent": 100
+        }
+    ]
+}
